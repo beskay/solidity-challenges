@@ -1,2 +1,4 @@
-cache/
 out/
+cache/
+node_modules/
+.env
