@@ -39,6 +39,6 @@ contract Private {
         // set exploited to true to prevent reentrancy
         exploited = true;
 
-        exp.mint(msg.sender, 1);
+        exp.mint(msg.sender, 1 ether);
     }
 }
