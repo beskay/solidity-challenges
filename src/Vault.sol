@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import "forge-std/Test.sol";
-
 contract Vault {
     uint256 public totalSupply;
     IERC20 public token;
@@ -17,8 +15,6 @@ contract Vault {
     }
 
     modifier onlyAuth() {
-        console.log(msg.sender);
-
         require(
             msg.sender == owner || msg.sender == address(this),
             "Not allowed"
