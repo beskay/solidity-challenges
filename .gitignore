@@ -2,3 +2,5 @@ out/
 cache/
 node_modules/
 .env
+
+test/
