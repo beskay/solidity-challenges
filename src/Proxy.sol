@@ -1,18 +1,15 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-interface IEXP {
-    function mint(address _to, uint256 _value) external;
-}
-
 contract Proxy {
     address private delegate;
-    address public owner = msg.sender;
-    IEXP public exp;
+    address public owner;
 
-    constructor(address expAddress, address _delegate) {
-        // initialize EXP and delegate contract
-        exp = IEXP(expAddress);
+    event ProxyDeactivated(address indexed from);
+
+    constructor(address _delegate) {
+        owner = msg.sender;
+        // initialize delegate contract
         delegate = _delegate;
     }
 
@@ -22,8 +19,7 @@ contract Proxy {
         // set delegate to zero address, essentially disabling this contract
         delegate = address(0);
 
-        // mint 1 exp as reward
-        exp.mint(msg.sender, 1 ether);
+        emit ProxyDeactivated(msg.sender);
     }
 
     fallback() external {

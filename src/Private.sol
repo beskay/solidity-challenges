@@ -1,44 +1,38 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-interface IEXP {
-    function mint(address _to, uint256 _value) external;
-}
-
 contract Private {
-    IEXP public exp;
-
     uint256 public constant NUM = 1337;
-    address public owner = address(0);
+    address public owner;
     bytes32[5] private randomData;
     mapping(address => uint256) public addressToKeys;
+    uint128 private a;
+    uint128 private b;
     uint256 private secretKey;
-    bool public exploited;
 
-    constructor(address expAddress, string memory seed) {
-        // initialize EXP contract
-        exp = IEXP(expAddress);
+    event OwnershipTaken(
+        address indexed previousOwner,
+        address indexed newOwner
+    );
+
+    constructor() {
+        owner = msg.sender;
 
         // create a random number and store it in a private variable
         secretKey = uint256(
             keccak256(
-                abi.encodePacked(
-                    blockhash(block.number - 1),
-                    block.timestamp,
-                    seed
-                )
+                abi.encodePacked(blockhash(block.number - 1), block.timestamp)
             )
         );
     }
 
-    function takeReward(uint256 key) public {
-        // only a person knowing the secretKey is allowed to take rewards
+    function takeOwnership(uint256 key) public {
+        // only a person knowing the secretKey is allowed to take ownership
         require(key == secretKey, "Not allowed!");
-        require(!exploited, "Can only exploit once!");
 
-        // set exploited to true to prevent reentrancy
-        exploited = true;
+        address oldOwner = owner;
+        owner = msg.sender;
 
-        exp.mint(msg.sender, 1 ether);
+        emit OwnershipTaken(oldOwner, msg.sender);
     }
 }

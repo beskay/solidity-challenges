@@ -4,12 +4,13 @@ pragma solidity ^0.8.13;
 contract Vault {
     uint256 public totalSupply;
     IERC20 public token;
-    uint256 public shares;
+    uint256 public test;
     address public owner;
 
     mapping(address => uint256) public balanceOf;
 
     constructor(address _token) {
+        owner = msg.sender;
         // set token to soulbound ERC20
         token = IERC20(_token);
     }
