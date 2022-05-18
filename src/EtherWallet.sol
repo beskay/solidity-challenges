@@ -2,20 +2,6 @@
 pragma solidity ^0.8.13;
 
 library ECDSA {
-    /**
-     * @dev Returns the address that signed a hashed message (`hash`) with
-     * `signature`. This address can then be used for verification purposes.
-     *
-     * The `ecrecover` EVM opcode allows for malleable (non-unique) signatures:
-     * this function rejects them by requiring the `s` value to be in the lower
-     * half order, and the `v` value to be either 27 or 28.
-     *
-     * IMPORTANT: `hash` _must_ be the result of a hash operation for the
-     * verification to be secure: it is possible to craft signatures that
-     * recover to arbitrary addresses for non-hashed data. A safe way to ensure
-     * this is by receiving a hash of the original message (which may otherwise
-     * be too long), and then calling {toEthSignedMessageHash} on it.
-     */
     function recover(bytes32 hash, bytes memory signature)
         internal
         pure
