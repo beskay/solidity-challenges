@@ -2,46 +2,49 @@
 pragma solidity ^0.8.13;
 
 contract Proxy {
-    address private delegate;
+    address public delegate;
     address public owner;
-
-    event ProxyDeactivated(address indexed from);
 
     constructor(address _delegate) {
         owner = msg.sender;
-        // initialize delegate contract
         delegate = _delegate;
     }
 
-    function deactiveProxy() external {
-        require(msg.sender == owner, "only owner");
-
-        // set delegate to zero address, essentially disabling this contract
-        delegate = address(0);
-
-        emit ProxyDeactivated(msg.sender);
-    }
-
-    fallback() external {
+    fallback() external payable {
+        address _delegate = delegate;
         assembly {
-            let _target := sload(0)
-            calldatacopy(0x0, 0x0, calldatasize())
-            let result := delegatecall(
+            // Copy msg.data. We take full control of memory in this inline assembly
+            // block because it will not return to Solidity code. We overwrite the
+            // Solidity scratch space at memory position 0.
+            calldatacopy(0, 0, calldatasize())
+
+            // delegatecall the implementation.
+            // out and outsize are 0 because we don't know the size yet.
+            let success := delegatecall(
                 gas(),
-                _target,
-                0x0,
+                _delegate,
+                0,
                 calldatasize(),
-                0x0,
+                0,
                 0
             )
-            returndatacopy(0x0, 0x0, returndatasize())
-            switch result
+
+            // copy the returned data.
+            returndatacopy(0, 0, returndatasize())
+
+            switch success
+            // delegatecall returns 0 on error.
             case 0 {
-                revert(0, 0)
+                revert(0, returndatasize())
             }
             default {
                 return(0, returndatasize())
             }
         }
+    }
+
+    function upgradeDelegate(address newDelegateAddress) public {
+        require(msg.sender == owner);
+        delegate = newDelegateAddress;
     }
 }
