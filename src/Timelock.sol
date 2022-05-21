@@ -7,11 +7,14 @@ contract Timelock {
     address public owner;
     bool locked;
 
-    // only send ETH via delegatecall from proxy, else it is lost
     receive() external payable {}
 
     function setReleaseDate(uint256 date) external {
-        require(!locked);
+        // only possible to increase lock
+        if (locked) {
+            require(date > releaseDate);
+        }
+
         locked = true;
         releaseDate = date;
     }
