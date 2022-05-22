@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-contract Proxy {
+contract ColdStorage {
     address public delegate;
     address public owner;
 

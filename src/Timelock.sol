@@ -2,9 +2,8 @@
 pragma solidity ^0.8.13;
 
 contract Timelock {
-    address public delegate;
-    uint256 releaseDate;
     address public owner;
+    uint256 releaseDate;
     bool locked;
 
     receive() external payable {}
@@ -13,9 +12,8 @@ contract Timelock {
         // only possible to increase lock
         if (locked) {
             require(date > releaseDate);
-        }
+        } else locked = true;
 
-        locked = true;
         releaseDate = date;
     }
 
@@ -24,5 +22,10 @@ contract Timelock {
         require(msg.sender == owner, "Only owner");
 
         payable(msg.sender).transfer(address(this).balance);
+    }
+
+    function execute(address _target, bytes memory payload) external {
+        (bool success, ) = address(_target).call(payload);
+        require(success, "failed");
     }
 }
