@@ -1,6 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
+/**
+ * A lightweight multisig wallet contract
+ * Calls will be delegated to the wallet library contract
+ * Owners can:
+ * - Submit a transaction
+ * - Approve and revoke approval of pending transactions
+ * - Anyone can execute a transaction after enough owners approved it
+ */
 contract Wallet {
     address public walletLibrary;
     address[] public owners;
@@ -27,13 +35,15 @@ contract Wallet {
     ) {
         walletLibrary = _walletLibrary;
 
-        (bool success, bytes memory data) = _walletLibrary.delegatecall(
+        (bool success, ) = _walletLibrary.delegatecall(
             abi.encodeWithSignature(
                 "initWallet(address[],uint256)",
                 _owners,
                 _numConfirmationsRequired
             )
         );
+
+        require(success, "initWallet failed");
     }
 
     function _delegate(address _imp) internal virtual {
@@ -67,6 +77,8 @@ contract Wallet {
             }
         }
     }
+
+    receive() external payable {}
 
     fallback() external payable {
         if (msg.data.length > 0) _delegate(walletLibrary);

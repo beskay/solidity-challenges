@@ -1,7 +1,15 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-contract MultiSigWallet {
+/**
+ * A multisig wallet library
+ * It is only deployed once, proxy contracts execute the functions via delegatecall
+ * Owners can:
+ * - Submit a transaction
+ * - Approve and revoke approval of pending transactions
+ * - Anyone can execute a transaction after enough owners approved it
+ */
+contract WalletLibrary {
     event Deposit(address indexed sender, uint256 amount, uint256 balance);
     event SubmitTransaction(
         address indexed owner,
