@@ -23,9 +23,4 @@ contract Timelock {
 
         payable(msg.sender).transfer(address(this).balance);
     }
-
-    function execute(address _target, bytes memory payload) external {
-        (bool success, ) = address(_target).call(payload);
-        require(success, "failed");
-    }
 }

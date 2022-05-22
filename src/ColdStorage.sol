@@ -5,13 +5,12 @@ contract ColdStorage {
     address public delegate;
     address public owner;
 
-    constructor(address _delegate) {
+    constructor(address _imp) {
         owner = msg.sender;
-        delegate = _delegate;
+        delegate = _imp;
     }
 
-    fallback() external payable {
-        address _delegate = delegate;
+    function _delegate(address _imp) internal {
         assembly {
             // Copy msg.data. We take full control of memory in this inline assembly
             // block because it will not return to Solidity code. We overwrite the
@@ -20,14 +19,7 @@ contract ColdStorage {
 
             // delegatecall the implementation.
             // out and outsize are 0 because we don't know the size yet.
-            let success := delegatecall(
-                gas(),
-                _delegate,
-                0,
-                calldatasize(),
-                0,
-                0
-            )
+            let success := delegatecall(gas(), _imp, 0, calldatasize(), 0, 0)
 
             // copy the returned data.
             returndatacopy(0, 0, returndatasize())
@@ -46,5 +38,9 @@ contract ColdStorage {
     function upgradeDelegate(address newDelegateAddress) public {
         require(msg.sender == owner);
         delegate = newDelegateAddress;
+    }
+
+    fallback() external payable {
+        if (msg.data.length > 0) _delegate(delegate);
     }
 }
