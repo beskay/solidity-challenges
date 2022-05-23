@@ -4,9 +4,9 @@ pragma solidity ^0.8.13;
 /**
  * General purpose cold storage contract
  * Implements a call and delegatecall function
- * delegate is a timelock contract, where its possible
- * to lock up your ETH for a given duration, basically
- * forcing you to hodl
+ * Standard delegate is a timelock contract, where users
+ * can lock up their ETH for a duration of their choosing,
+ * basically forcing them to hodl
  */
 contract ColdStorage {
     address public delegate;

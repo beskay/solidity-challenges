@@ -11,7 +11,7 @@ contract Timelock {
     function setReleaseDate(uint256 date) external {
         // only possible to increase lock
         if (locked) {
-            require(date > releaseDate);
+            require(date > releaseDate, "You cant decrease the lock time!");
         } else locked = true;
 
         releaseDate = date;
