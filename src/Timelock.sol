@@ -3,8 +3,8 @@ pragma solidity ^0.8.13;
 
 contract Timelock {
     address public owner;
-    uint256 releaseDate;
-    bool locked;
+    uint256 public releaseDate;
+    bool public locked;
 
     receive() external payable {}
 

@@ -46,6 +46,12 @@ contract Wallet {
         require(success, "initWallet failed");
     }
 
+    receive() external payable {}
+
+    fallback() external payable {
+        _delegate(walletLibrary);
+    }
+
     function _delegate(address _imp) internal virtual {
         assembly {
             // calldatacopy(t, f, s)
@@ -76,11 +82,5 @@ contract Wallet {
                 return(0, returndatasize())
             }
         }
-    }
-
-    receive() external payable {}
-
-    fallback() external payable {
-        if (msg.data.length > 0) _delegate(walletLibrary);
     }
 }
