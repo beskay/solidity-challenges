@@ -5,12 +5,12 @@ pragma solidity ^0.8.13;
  * General purpose cold storage contract
  * Implements a call and delegatecall function
  * Standard delegate is a timelock contract, where users
- * can lock up their ETH for a duration of their choosing,
- * basically forcing them to hodl
+ * can lock up their ETH for a duration of their choosing
  */
 contract ColdStorage {
     address public delegate;
     address public owner;
+    bool public locked;
 
     event Deposit(address _from, uint256 value);
     event DelegateUpdated(address oldDelegate, address newDelegate);
@@ -28,9 +28,12 @@ contract ColdStorage {
         _;
     }
 
+    receive() external payable {
+        emit Deposit(msg.sender, msg.value);
+    }
+
     fallback() external payable {
-        if (msg.value > 0) emit Deposit(msg.sender, msg.value);
-        else if (msg.data.length > 0) _delegate(delegate);
+        _delegate(delegate);
     }
 
     function execute(address _target, bytes memory payload)
@@ -43,11 +46,17 @@ contract ColdStorage {
     }
 
     function upgradeDelegate(address newDelegateAddress) external {
-        require(msg.sender == owner);
+        require(msg.sender == owner, "Only owner");
         address oldDelegate = delegate;
         delegate = newDelegateAddress;
 
         emit DelegateUpdated(oldDelegate, newDelegateAddress);
+    }
+
+    function withdraw() external {
+        require(!locked, "Funds are locked!");
+
+        payable(owner).transfer(address(this).balance);
     }
 
     function _delegate(address _imp) internal onlyAuth {
