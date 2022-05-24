@@ -68,7 +68,7 @@ contract WalletLibrary {
         require(
             _numConfirmationsRequired > 0 &&
                 _numConfirmationsRequired <= _owners.length,
-            "invalid number of required confirmations"
+            "invalid number of confirmations"
         );
 
         for (uint256 i = 0; i < _owners.length; i++) {

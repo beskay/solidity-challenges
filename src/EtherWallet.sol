@@ -124,14 +124,18 @@ contract EtherWallet {
         bytes32 r,
         bytes32 s
     ) public {
-        require(!usedSignatures[keccak256(abi.encodePacked(v, r, s))]);
+        require(
+            !usedSignatures[keccak256(abi.encodePacked(v, r, s))],
+            "Signature already used!"
+        );
         require(
             ECDSA.recover(
                 keccak256("\x19Ethereum Signed Message:\n32"),
                 v,
                 r,
                 s
-            ) == owner
+            ) == owner,
+            "No permission!"
         );
 
         usedSignatures[keccak256(abi.encodePacked(v, r, s))] = true;
