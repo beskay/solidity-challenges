@@ -1,5 +1,5 @@
 {
-  "name": "forge-template",
+  "name": "soliditychallenges",
   "version": "1.0.0",
   "scripts": {
     "prettier": "prettier --write 'src/**/*.sol'",
