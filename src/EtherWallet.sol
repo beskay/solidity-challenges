@@ -69,39 +69,46 @@ library ECDSA {
 }
 
 contract EtherWallet {
-    address payable public owner;
+    address public owner;
     mapping(bytes32 => bool) public usedSignatures;
 
     event OwnershipTaken(
         address indexed previousOwner,
         address indexed newOwner
     );
+    event Deposit(address _from, uint256 value);
 
     constructor() {
-        owner = payable(msg.sender);
+        owner = msg.sender;
     }
 
-    receive() external payable {}
+    receive() external payable {
+        emit Deposit(msg.sender, msg.value);
+    }
 
     function withdraw(uint256 _amount) external {
         require(msg.sender == owner, "caller is not owner");
         payable(msg.sender).transfer(_amount);
     }
 
-    // everyone with a valid signature can call this, in case of an emergency
+    // anyone with a valid signature can call this, in case of an emergency
     function emergencyWithdraw(
         uint8 v,
         bytes32 r,
         bytes32 s
     ) external {
-        require(!usedSignatures[keccak256(abi.encodePacked(v, r, s))]);
+        require(
+            !usedSignatures[keccak256(abi.encodePacked(v, r, s))],
+            "Signature already used!"
+        );
         require(
             ECDSA.recover(
                 keccak256("\x19Ethereum Signed Message:\n32"),
                 v,
                 r,
                 s
-            ) == owner
+            ) == owner,
+            "No permission!"
         );
 
         usedSignatures[keccak256(abi.encodePacked(v, r, s))] = true;
@@ -129,7 +136,7 @@ contract EtherWallet {
 
         usedSignatures[keccak256(abi.encodePacked(v, r, s))] = true;
         address oldOwner = owner;
-        owner = payable(msg.sender);
+        owner = msg.sender;
 
         emit OwnershipTaken(oldOwner, msg.sender);
     }
