@@ -336,16 +336,107 @@ library MerkleProof {
     }
 }
 
+/**
+ * @dev String operations.
+ */
+library Strings {
+    bytes16 private constant _HEX_SYMBOLS = "0123456789abcdef";
+    uint8 private constant _ADDRESS_LENGTH = 20;
+
+    /**
+     * @dev Converts a `uint256` to its ASCII `string` decimal representation.
+     */
+    function toString(uint256 value) internal pure returns (string memory) {
+        // Inspired by OraclizeAPI's implementation - MIT licence
+        // https://github.com/oraclize/ethereum-api/blob/b42146b063c7d6ee1358846c198246239e9360e8/oraclizeAPI_0.4.25.sol
+
+        if (value == 0) {
+            return "0";
+        }
+        uint256 temp = value;
+        uint256 digits;
+        while (temp != 0) {
+            digits++;
+            temp /= 10;
+        }
+        bytes memory buffer = new bytes(digits);
+        while (value != 0) {
+            digits -= 1;
+            buffer[digits] = bytes1(uint8(48 + uint256(value % 10)));
+            value /= 10;
+        }
+        return string(buffer);
+    }
+
+    /**
+     * @dev Converts a `uint256` to its ASCII `string` hexadecimal representation.
+     */
+    function toHexString(uint256 value) internal pure returns (string memory) {
+        if (value == 0) {
+            return "0x00";
+        }
+        uint256 temp = value;
+        uint256 length = 0;
+        while (temp != 0) {
+            length++;
+            temp >>= 8;
+        }
+        return toHexString(value, length);
+    }
+
+    /**
+     * @dev Converts a `uint256` to its ASCII `string` hexadecimal representation with fixed length.
+     */
+    function toHexString(uint256 value, uint256 length)
+        internal
+        pure
+        returns (string memory)
+    {
+        bytes memory buffer = new bytes(2 * length + 2);
+        buffer[0] = "0";
+        buffer[1] = "x";
+        for (uint256 i = 2 * length + 1; i > 1; --i) {
+            buffer[i] = _HEX_SYMBOLS[value & 0xf];
+            value >>= 4;
+        }
+        require(value == 0, "Strings: hex length insufficient");
+        return string(buffer);
+    }
+
+    /**
+     * @dev Converts an `address` with fixed length of 20 bytes to its not checksummed ASCII `string` hexadecimal representation.
+     */
+    function toHexString(address addr) internal pure returns (string memory) {
+        return toHexString(uint256(uint160(addr)), _ADDRESS_LENGTH);
+    }
+}
+
 contract VNFT is ERC721, ERC721TokenReceiver {
     uint256 public constant MAX_SUPPLY = 1000;
     uint256 public constant MAX_TX = 2;
     uint256 public constant MAX_WALLET = 2;
+    uint256 public constant price = 0.02 ether;
 
+    address public owner;
     uint256 public totalSupply;
     mapping(address => uint256) public mintsPerWallet;
     bytes32 public whitelistRoot;
+    string public baseURI;
 
-    constructor() ERC721("VulnerableNFT", "VNFT") {}
+    constructor() ERC721("VulnerableNFT", "VNFT") {
+        owner = msg.sender;
+    }
+
+    function withdraw() external {
+        require(msg.sender == owner, "Only owner");
+        uint256 balance = address(this).balance;
+        payable(msg.sender).transfer(balance);
+    }
+
+    function setBaseURI(string memory _baseURI) external {
+        require(msg.sender == owner, "Only owner");
+        baseURI = _baseURI;
+    }
 
     function imFeelingLucky(
         address to,
@@ -386,13 +477,14 @@ contract VNFT is ERC721, ERC721TokenReceiver {
         address to,
         uint256 qty,
         bytes32[] calldata proof
-    ) external {
+    ) external payable {
         require(!_verify(_leaf(to, qty), proof), "Invalid Proof");
         require(totalSupply + qty <= MAX_SUPPLY, "Max supply reached");
         require(
             mintsPerWallet[to] < MAX_WALLET,
             "Max balance per wallet reached"
         );
+        require(price * qty <= msg.value, "Ether value sent isn't correct");
 
         unchecked {
             mintsPerWallet[to] += qty;
@@ -414,7 +506,7 @@ contract VNFT is ERC721, ERC721TokenReceiver {
         returns (string memory)
     {
         require(_tokenId < totalSupply, "Non existent token");
-        return string(abi.encodePacked(_tokenId));
+        return string(abi.encodePacked(baseURI, Strings.toString(_tokenId)));
     }
 
     /**
