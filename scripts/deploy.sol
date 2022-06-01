@@ -39,7 +39,7 @@ contract Deploy is Test {
         lock = new Timelock();
         coldstorage = new ColdStorage(address(lock));
 
-        // deploy and set up etherwallet
+        // deploy etherwallet
         etherwallet = new EtherWallet();
 
         // deploy vnft
