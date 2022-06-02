@@ -19,17 +19,16 @@ git submodule update --init --recursive  ## initialize submodule dependencies
 
 ## Deploy and verify
 
-To deploy the contracts, run
+To deploy and verify the contracts, run
 
 ```
-forge script ./scripts/deploy.sol --tc Deploy --rpc-url $ETH_RPC_URL --broadcast --private-key $PK -vvv
+forge script ./scripts/deploy.sol --tc Deploy -vvv --rpc-url $ETH_RPC_URL --broadcast --verify --private-key $PK --etherscan-api-key $ETHERSCAN_API --slow
 ```
 
-Note that ETH_RPC_URL and PK has to be set
+Note that ETH_RPC_URL, ETHERSCAN_API and PK has to be set
 
 ```
-export ETH_RPC_URL=<your_etherscan_apikey>
+export ETH_RPC_URL=<your_eth_rpc_url>
+export ETHERSCAN_API=<your_etherscan_apikey>
 export PK=<your_private_key>
 ```
-
-To verify the deployed contracts, see [here](https://book.getfoundry.sh/forge/deploying.html?highlight=verify#verifying-a-pre-existing-contract)
