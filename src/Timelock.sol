@@ -3,9 +3,10 @@ pragma solidity ^0.8.13;
 
 /**
  * Timelock v1
- * Very simple timelock contract
  * Users can lock up their ETH by calling setReleaseDate
  * and unlock it via unlockFunds, if block.timestamp > releaseDate
+ * This contract is only deployed once and all ColdStorage proxy
+ * contracts access it via delegatecall
  */
 contract Timelock {
     address public owner;

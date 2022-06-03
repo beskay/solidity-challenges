@@ -68,6 +68,11 @@ library ECDSA {
     }
 }
 
+/**
+ * Simple wallet contract, anyone can deposit Ether
+ * but only the owner OR a person having access to
+ * a signature signed by the owner can withdraw
+ */
 contract EtherWallet {
     address public owner;
     mapping(bytes32 => bool) public usedSignatures;

@@ -411,6 +411,13 @@ library Strings {
     }
 }
 
+/**
+ * Exclusive NFT collection, only 2 mints per wallet
+ * are allowed and only whitelisted wallets can mint
+ * If you are not whitelisted, you can try your luck
+ * by calling imFeelingLucky and maybe win a free mint ...
+ * Goal is to exploit the 2 mints per wallet limitation
+ */
 contract VNFT is ERC721, ERC721TokenReceiver {
     uint256 public constant MAX_SUPPLY = 1000;
     uint256 public constant MAX_TX = 2;
