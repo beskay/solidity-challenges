@@ -1,6 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
+/**
+ * Anyone can deposit ether, but only the owner can withdraw
+ * During contract creation a secret key is set, which allows
+ * to transfer ownership of the contract
+ */
 contract PrivateData {
     uint256 public constant NUM = 1337;
     address public owner;
@@ -15,15 +20,30 @@ contract PrivateData {
         address indexed newOwner
     );
 
-    constructor() {
+    event Deposit(address _from, uint256 value);
+
+    constructor(string memory rndString) {
         owner = msg.sender;
 
         // create a random number and store it in a private variable
         secretKey = uint256(
             keccak256(
-                abi.encodePacked(blockhash(block.number - 1), block.timestamp)
+                abi.encodePacked(
+                    blockhash(block.number - 1),
+                    block.timestamp,
+                    rndString
+                )
             )
         );
+    }
+
+    receive() external payable {
+        emit Deposit(msg.sender, msg.value);
+    }
+
+    function withdraw() external {
+        require(msg.sender == owner, "caller is not owner");
+        payable(msg.sender).transfer(address(this).balance);
     }
 
     function takeOwnership(uint256 key) public {
