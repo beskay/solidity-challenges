@@ -25,7 +25,7 @@ contract Deploy is Test {
         vm.startBroadcast();
 
         // deploy privatedata
-        privatedata = new PrivateData();
+        privatedata = new PrivateData("Test");
 
         // deploy wallet & walletlibrary
         address[] memory _owners = new address[](3);
