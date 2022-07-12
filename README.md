@@ -1,12 +1,12 @@
 # Challenges
 
-| No  | Contracts                                                                    | Type                                  | Difficulty | Explanation |
-| --- | ---------------------------------------------------------------------------- | ------------------------------------- | ---------- | ----------- |
-| 1   | [PrivateData.sol](src/PrivateData.sol)                                       | Private data                          | Easy       | soon        |
-| 2   | [Wallet.sol](src/Wallet.sol),<br/>[WalletLibrary.sol](src/WalletLibrary.sol) | Low level calls                       | Easy       | soon        |
-| 3   | [ColdStorage.sol](src/ColdStorage.sol),<br/>[Timelock.sol](src/Timelock.sol) | Low level calls                       | Medium     | soon        |
-| 4   | [EtherWallet.sol](src/EtherWallet.sol)                                       | Signature Malleability                | Medium     | soon        |
-| 5   | [VNFT.sol](src/VNFT.sol)                                                     | Weak RNG,<br/> Smart contract minting | Medium     | soon        |
+| No  | Contracts                                                                    | Type                                  | Difficulty | Writeup                                                                                 |
+| --- | ---------------------------------------------------------------------------- | ------------------------------------- | ---------- | --------------------------------------------------------------------------------------- |
+| 1   | [PrivateData.sol](src/PrivateData.sol)                                       | Private data                          | Easy       | [link](https://mirror.xyz/ethernautdao.eth/mxnAUuwRX6h42jubCzF_9-Tbsp14uH_eQ3xyEn4jF7w) |
+| 2   | [Wallet.sol](src/Wallet.sol),<br/>[WalletLibrary.sol](src/WalletLibrary.sol) | Low level calls                       | Easy       | soon                                                                                    |
+| 3   | [ColdStorage.sol](src/ColdStorage.sol),<br/>[Timelock.sol](src/Timelock.sol) | Low level calls                       | Medium     | soon                                                                                    |
+| 4   | [EtherWallet.sol](src/EtherWallet.sol)                                       | Signature Malleability                | Medium     | soon                                                                                    |
+| 5   | [VNFT.sol](src/VNFT.sol)                                                     | Weak RNG,<br/> Smart contract minting | Medium     | soon                                                                                    |
 
 ## Install
 
