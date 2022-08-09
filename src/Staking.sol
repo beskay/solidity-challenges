@@ -2,7 +2,6 @@
 pragma solidity ^0.8.4;
 
 import "openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
-import "openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol";
 import "openzeppelin-contracts/contracts/utils/math/Math.sol";
 import "openzeppelin-contracts/contracts/utils/math/SafeMath.sol";
 import "openzeppelin-contracts/contracts/access/Ownable.sol";
@@ -11,7 +10,6 @@ import "openzeppelin-contracts/contracts/security/Pausable.sol";
 
 contract MultiRewards is ReentrancyGuard, Ownable, Pausable {
     using SafeMath for uint256;
-    using SafeERC20 for IERC20;
 
     /* ========== STATE VARIABLES ========== */
 
@@ -23,16 +21,22 @@ contract MultiRewards is ReentrancyGuard, Ownable, Pausable {
         uint256 lastUpdateTime;
         uint256 rewardPerTokenStored;
     }
+
     IERC20 public stakingToken;
+    // reward token -> Reward struct
     mapping(address => Reward) public rewardData;
+    // array of reward tokens
     address[] public rewardTokens;
 
     // user -> reward token -> amount
     mapping(address => mapping(address => uint256))
         public userRewardPerTokenPaid;
+    // user -> rerward token -> amount
     mapping(address => mapping(address => uint256)) public rewards;
 
+    // total supply of staking token
     uint256 private _totalSupply;
+    // user -> amount of staked token
     mapping(address => uint256) private _balances;
 
     /* ========== CONSTRUCTOR ========== */
@@ -105,6 +109,7 @@ contract MultiRewards is ReentrancyGuard, Ownable, Pausable {
                 .add(rewards[account][_rewardsToken]);
     }
 
+    /// returns reward for defined rewardDuration
     function getRewardForDuration(address _rewardsToken)
         external
         view
@@ -134,7 +139,7 @@ contract MultiRewards is ReentrancyGuard, Ownable, Pausable {
         require(amount > 0, "Cannot stake 0");
         _totalSupply = _totalSupply.add(amount);
         _balances[msg.sender] = _balances[msg.sender].add(amount);
-        stakingToken.safeTransferFrom(msg.sender, address(this), amount);
+        stakingToken.transferFrom(msg.sender, address(this), amount);
         emit Staked(msg.sender, amount);
     }
 
@@ -146,7 +151,7 @@ contract MultiRewards is ReentrancyGuard, Ownable, Pausable {
         require(amount > 0, "Cannot withdraw 0");
         _totalSupply = _totalSupply.sub(amount);
         _balances[msg.sender] = _balances[msg.sender].sub(amount);
-        stakingToken.safeTransfer(msg.sender, amount);
+        stakingToken.transfer(msg.sender, amount);
         emit Withdrawn(msg.sender, amount);
     }
 
@@ -155,8 +160,18 @@ contract MultiRewards is ReentrancyGuard, Ownable, Pausable {
             address _rewardsToken = rewardTokens[i];
             uint256 reward = rewards[msg.sender][_rewardsToken];
             if (reward > 0) {
+                (bool success, ) = address(_rewardsToken).call(
+                    abi.encodeWithSignature(
+                        "transfer(address,uint256)",
+                        msg.sender,
+                        reward
+                    )
+                );
+                if (!success) {
+                    _pause();
+                    return;
+                }
                 rewards[msg.sender][_rewardsToken] = 0;
-                IERC20(_rewardsToken).safeTransfer(msg.sender, reward);
                 emit RewardPaid(msg.sender, _rewardsToken, reward);
             }
         }
@@ -176,11 +191,7 @@ contract MultiRewards is ReentrancyGuard, Ownable, Pausable {
         require(rewardData[_rewardsToken].rewardsDistributor == msg.sender);
         // handle the transfer of reward tokens via `transferFrom` to reduce the number
         // of transactions required and ensure correctness of the reward amount
-        IERC20(_rewardsToken).safeTransferFrom(
-            msg.sender,
-            address(this),
-            reward
-        );
+        IERC20(_rewardsToken).transferFrom(msg.sender, address(this), reward);
 
         if (block.timestamp >= rewardData[_rewardsToken].periodFinish) {
             rewardData[_rewardsToken].rewardRate = reward.div(
@@ -218,7 +229,7 @@ contract MultiRewards is ReentrancyGuard, Ownable, Pausable {
             rewardData[tokenAddress].lastUpdateTime == 0,
             "Cannot withdraw reward token"
         );
-        IERC20(tokenAddress).safeTransfer(owner(), tokenAmount);
+        IERC20(tokenAddress).transfer(owner(), tokenAmount);
         emit Recovered(tokenAddress, tokenAmount);
     }
 
