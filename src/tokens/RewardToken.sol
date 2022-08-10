@@ -66,7 +66,7 @@ contract RewardToken is ReentrancyGuard, Ownable {
         string memory _name,
         string memory _symbol,
         address _lpStaker
-    ) public Ownable() {
+    ) {
         name = _name;
         symbol = _symbol;
         lpStaker = _lpStaker;
@@ -110,7 +110,7 @@ contract RewardToken is ReentrancyGuard, Ownable {
                 address account = accounts[x];
                 if (account == address(0)) break;
                 if (account == _lpStaker) continue;
-                for (uint256 k = 0; k < accounts.length + 20; k++) {
+                for (uint256 k = 0; k <= accounts.length.mul(30); k++) {
                     rewards[account][token] = earned(account, token);
                     userRewardPerTokenPaid[account][token] = rewardData[token]
                         .rewardPerTokenStored;
