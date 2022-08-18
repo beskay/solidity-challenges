@@ -75,7 +75,7 @@ library ECDSA {
  */
 contract EtherWallet {
     address public owner;
-    mapping(bytes32 => bool) public usedSignatures;
+    mapping(bytes => bool) public usedSignatures;
 
     event OwnershipTaken(
         address indexed previousOwner,
@@ -97,26 +97,17 @@ contract EtherWallet {
     }
 
     // anyone with a valid signature can call this, in case of an emergency
-    function emergencyWithdraw(
-        uint8 v,
-        bytes32 r,
-        bytes32 s
-    ) external {
-        require(
-            !usedSignatures[keccak256(abi.encodePacked(v, r, s))],
-            "Signature already used!"
-        );
+    function emergencyWithdraw(bytes memory signature) external {
+        require(!usedSignatures[signature], "Signature already used!");
         require(
             ECDSA.recover(
                 keccak256("\x19Ethereum Signed Message:\n32"),
-                v,
-                r,
-                s
+                signature
             ) == owner,
             "No permission!"
         );
 
-        usedSignatures[keccak256(abi.encodePacked(v, r, s))] = true;
+        usedSignatures[signature] = true;
         payable(msg.sender).transfer(address(this).balance);
     }
 
@@ -124,26 +115,17 @@ contract EtherWallet {
         return address(this).balance;
     }
 
-    function takeOwnership(
-        uint8 v,
-        bytes32 r,
-        bytes32 s
-    ) public {
-        require(
-            !usedSignatures[keccak256(abi.encodePacked(v, r, s))],
-            "Signature already used!"
-        );
+    function transferOwnership(bytes memory signature) public {
+        require(!usedSignatures[signature], "Signature already used!");
         require(
             ECDSA.recover(
                 keccak256("\x19Ethereum Signed Message:\n32"),
-                v,
-                r,
-                s
+                signature
             ) == owner,
             "No permission!"
         );
 
-        usedSignatures[keccak256(abi.encodePacked(v, r, s))] = true;
+        usedSignatures[signature] = true;
         address oldOwner = owner;
         owner = msg.sender;
 
