@@ -10,7 +10,6 @@ contract VNFT is ERC721, Ownable {
     uint256 public constant MAX_SUPPLY = 1000;
     uint256 public constant MAX_TX = 2;
     uint256 public constant MAX_WALLET = 2;
-    uint256 public constant price = 0.02 ether;
 
     uint256 public totalSupply;
     mapping(address => uint256) public mintsPerWallet;
@@ -27,7 +26,7 @@ contract VNFT is ERC721, Ownable {
         baseURI = _baseURI;
     }
 
-    // try your luck and win a free mint
+    // try your luck and mint even if you are not whitelisted
     function imFeelingLucky(
         address to,
         uint256 qty,
@@ -79,7 +78,6 @@ contract VNFT is ERC721, Ownable {
             mintsPerWallet[to] < MAX_WALLET,
             "Max balance per wallet reached"
         );
-        require(price * qty <= msg.value, "Ether value sent isn't correct");
 
         unchecked {
             mintsPerWallet[to] += qty;
