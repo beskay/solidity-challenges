@@ -7,7 +7,7 @@ import "openzeppelin-contracts/contracts/utils/Strings.sol";
 import "openzeppelin-contracts/contracts/utils/cryptography/ECDSA.sol";
 
 contract VNFT is ERC721, Ownable {
-    uint256 public constant MAX_SUPPLY = 1000;
+    uint256 public constant MAX_SUPPLY = 10000;
     uint256 public constant MAX_TX = 2;
     uint256 public constant MAX_WALLET = 2;
 
@@ -35,7 +35,7 @@ contract VNFT is ERC721, Ownable {
         require(qty > 0 && qty <= MAX_TX, "Invalid quantity");
         require(totalSupply + qty <= MAX_SUPPLY, "Max supply reached");
         require(
-            mintsPerWallet[to] < MAX_WALLET,
+            mintsPerWallet[to] + qty <= MAX_WALLET,
             "Max balance per wallet reached"
         );
         require((msg.sender).code.length == 0, "Only EOA allowed");
@@ -75,7 +75,7 @@ contract VNFT is ERC721, Ownable {
         );
         require(totalSupply + qty <= MAX_SUPPLY, "Max supply reached");
         require(
-            mintsPerWallet[to] < MAX_WALLET,
+            mintsPerWallet[to] + qty <= MAX_WALLET,
             "Max balance per wallet reached"
         );
 
