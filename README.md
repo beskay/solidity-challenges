@@ -33,3 +33,5 @@ export ETH_RPC_URL=<your_eth_rpc_url>
 export ETHERSCAN_API=<your_etherscan_apikey>
 export PK=<your_private_key>
 ```
+
+Or create a .env file and load the variables with `source .env`
