@@ -23,7 +23,7 @@ git submodule update --init --recursive  ## initialize submodule dependencies
 To deploy and verify the contracts, run
 
 ```
-forge script script/deploy.sol --tc Deploy -vvv --rpc-url $ETH_RPC_URL --broadcast --verify --private-key $PK --etherscan-api-key $ETHERSCAN_API
+forge script script/<deploy_script>.sol:<contract_name> --rpc-url $RPC_URL --broadcast --verify --private-key $PK --etherscan-api-key $ETHERSCAN_API -vvv
 ```
 
 Note that ETH_RPC_URL, ETHERSCAN_API and PK has to be set
