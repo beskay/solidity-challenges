@@ -70,20 +70,22 @@ library ECDSA {
 
 /**
  * Simple wallet contract, anyone can deposit Ether
- * but only the owner OR a person having access to
- * a signature signed by the owner can withdraw
+ * and anyone with a valid signature can withdraw, in case
+ * of an emergency
  */
 contract EtherWallet {
     address public owner;
     mapping(bytes => bool) public usedSignatures;
 
-    event OwnershipTaken(
-        address indexed previousOwner,
+    event Deposit(address indexed _from, uint256 indexed value);
+    event Withdraw(address indexed _to, uint256 indexed value);
+
+    event OwnershipTransferred(
+        address indexed oldOwner,
         address indexed newOwner
     );
-    event Deposit(address _from, uint256 value);
 
-    constructor() {
+    constructor() payable {
         owner = msg.sender;
     }
 
@@ -91,13 +93,8 @@ contract EtherWallet {
         emit Deposit(msg.sender, msg.value);
     }
 
-    function withdraw(uint256 _amount) external {
-        require(msg.sender == owner, "caller is not owner");
-        payable(msg.sender).transfer(_amount);
-    }
-
     // anyone with a valid signature can call this, in case of an emergency
-    function emergencyWithdraw(bytes memory signature) external {
+    function withdraw(bytes memory signature) external {
         require(!usedSignatures[signature], "Signature already used!");
         require(
             ECDSA.recover(
@@ -106,29 +103,19 @@ contract EtherWallet {
             ) == owner,
             "No permission!"
         );
-
         usedSignatures[signature] = true;
-        payable(msg.sender).transfer(address(this).balance);
+
+        uint256 balance = address(this).balance;
+        payable(msg.sender).transfer(balance);
+
+        emit Withdraw(msg.sender, balance);
     }
 
-    function getBalance() external view returns (uint256) {
-        return address(this).balance;
-    }
+    function transferOwnership(address newOwner) public {
+        require(msg.sender == owner, "No permission!");
 
-    function transferOwnership(bytes memory signature) public {
-        require(!usedSignatures[signature], "Signature already used!");
-        require(
-            ECDSA.recover(
-                keccak256("\x19Ethereum Signed Message:\n32"),
-                signature
-            ) == owner,
-            "No permission!"
-        );
-
-        usedSignatures[signature] = true;
         address oldOwner = owner;
-        owner = msg.sender;
-
-        emit OwnershipTaken(oldOwner, msg.sender);
+        owner = newOwner;
+        emit OwnershipTransferred(oldOwner, newOwner);
     }
 }
