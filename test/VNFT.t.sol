@@ -59,12 +59,6 @@ interface IVNFT {
  * This exploit is inspired from the adidas NFT mint, which got exploited
  * in exactly the same way, see:
  * https://cryptonews.com/news/investor-purchases-330-adidas-nfts-using-smart-contract-328-more-than-cap.htm
- *
- * To make it a bit more interesting, the attacker also has to guess a random number
- * to be able to mint
- *
- * Note: The whitelistMint function is only included for added confusion, theres no merkle root provided
- * so no one can successfully mint from it
  */
 contract Attacker {
     constructor(address EOA, address vnft) {
