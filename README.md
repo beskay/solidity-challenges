@@ -6,7 +6,7 @@
 | 2   | [Wallet.sol](src/Wallet.sol),<br/>[WalletLibrary.sol](src/WalletLibrary.sol) | Low level calls                       | Easy       | [link](https://mirror.xyz/ethernautdao.eth/-rj5iTdt_GTRNS7aIzJBwqp95UGemxIMzNN-m96Io8Y) |
 | 3   | [ColdStorage.sol](src/ColdStorage.sol),<br/>[Timelock.sol](src/Timelock.sol) | Low level calls                       | Medium     | soon                                                                                    |
 | 4   | [EtherWallet.sol](src/EtherWallet.sol)                                       | Signature Malleability                | Medium     | soon                                                                                    |
-| 5   | [VNFT.sol](src/VNFT.sol)                                                     | Weak RNG,<br/> Smart contract minting | Medium     | soon                                                                                    |
+| 5   | [VNFT.sol](src/VNFT.sol)                                                     | Weak RNG,<br/> Smart contract minting | Medium     | [VNFT.md](writeups/VNFT.md)                                                             |
 | 6   | Staking (coming soon)                                                        | TBA                                   | TBA        | soon                                                                                    |
 
 ## Install
