@@ -128,7 +128,7 @@ if (v == 27) {
 
 Equipped with our new signature, we just have to call `withdraw` again:
 
-```
+```solidity
 bytes memory newSignature = abi.encodePacked(r, sNew, vNew);
 (bool success, bytes memory ret) = address(etherwallet).call(
     abi.encodeWithSignature("withdraw(bytes)", newSignature)
