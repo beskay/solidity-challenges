@@ -135,9 +135,9 @@ bytes memory newSignature = abi.encodePacked(r, sNew, vNew);
 );
 ```
 
-See [exploitEtherWallet.sol](../script/exploits/ExploitEtherWallet.sol) for full code.
+See [ExploitEtherWallet.sol](../script/exploits/ExploitEtherWallet.sol) for full code.
 
 ## Further information
 
-- [VNFT.t.sol](../test/EtherWallet.t.sol) test script setting up and exploiting the contract
+- [EtherWallet.t.sol](../test/EtherWallet.t.sol) test script setting up and exploiting the contract
 - [More info](http://coders-errand.com/malleability-ecdsa-signatures/) about signature malleability
