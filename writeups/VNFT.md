@@ -143,7 +143,7 @@ function attack(address EOA) public {
 
 ## Further information
 
-- [VNFT.t.sol](test/VNFT.t.sol) for a test script exploiting the contract
+- [VNFT.t.sol](../test/VNFT.t.sol) for a test script exploiting the contract
 - [Implementation](https://goerli.etherscan.io/address/0x85811aa24f3f75c8cfd07aa3fab7e6d20e3b29f7#code) from adriro
 - [Implementation](https://github.com/JonathanAmenechi/ethernaut-challenges/blob/main/src/Exploit9.sol) from jon_amen
 
