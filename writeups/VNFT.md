@@ -122,7 +122,7 @@ Simply use a prior used signature to circumvent the whitelist check.
 
 ### Exploit in a single transaction
 
-To exploit the sale by minting more than the 2 allowed tokens in a single transaction you have to write an attacker contract, which deploys several minting-contracts, executing your exploit logic.
+To exploit the sale by minting more than the 2 allowed tokens in a single transaction you have to write an attacker contract, which deploys several minting contracts, executing your exploit logic.
 
 ```solidity
 function attack(address EOA) public {
@@ -146,3 +146,5 @@ function attack(address EOA) public {
 - [VNFT.t.sol](test/VNFT.t.sol) for a test script exploiting the contract
 - [Implementation](https://goerli.etherscan.io/address/0x85811aa24f3f75c8cfd07aa3fab7e6d20e3b29f7#code) from adriro
 - [Implementation](https://github.com/JonathanAmenechi/ethernaut-challenges/blob/main/src/Exploit9.sol) from jon_amen
+
+This exploit is inspired from the adidas NFT mint, which got exploited in a similiar way, where one user minted 328 more tokens than allowed, see [this](https://cryptonews.com/news/investor-purchases-330-adidas-nfts-using-smart-contract-328-more-than-cap.htm) link for more info.
