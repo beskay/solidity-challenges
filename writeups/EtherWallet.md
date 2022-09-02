@@ -135,7 +135,7 @@ bytes memory newSignature = abi.encodePacked(r, sNew, vNew);
 );
 ```
 
-See [exploitEtherWallet.sol](../script/exploits/exploitEtherWallet.sol) for full code.
+See [exploitEtherWallet.sol](../script/exploits/ExploitEtherWallet.sol) for full code.
 
 ## Further information
 
