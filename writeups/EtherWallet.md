@@ -56,7 +56,7 @@ function recover(
 
 To hack this contract, one has to understand how ECDSA signatures work: Ethereum signatures consists of three integers: `v`, `r` and `s`.
 
-ECDSA uses elliptic curves, which are **symmetric** over the x-axis -- `r` is related to the x coordinate of the elliptic curve, while `s` is related to
+ECDSA uses elliptic curves, which are **symmetric over the x-axis**: `r` is related to the x coordinate of the elliptic curve, while `s` is related to
 the y coordinate.
 
 ==> That means if `(r, s)` is a valid signature, `(r, n - s)` is valid too:
@@ -65,7 +65,7 @@ the y coordinate.
 || 0 1 2 s0 4 | 5 s1 7 8 n ||  <== s0=3 and s1=6 are both valid
 ```
 
-We use `v` to find out which point to use, in Ethereum its either `0x1b` (27) for `s < n/2`, or `0x1c` (28) for `s > n/2`. For the secp256k1 curve used in Ethereum (and Bitcoin) `n` is `0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141`.
+We use `v` to find out which point to use, in Ethereum its either `0x1b` (27) for `s < n/2`, or `0x1c` (28) for `s > n/2`. For the secp256k1 curve used in Ethereum (and Bitcoin) `n` equals `0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141`.
 
 Battle tested contracts, like OpenZeppelin's ECDSA library, enforce that `s` is in the lower half, preventing the Signature malleability exploit. However, the built-in Ethereum function `ecrecover(hash, v, r, s)` does not. So, if theres an existing tx on the blockchain with values `v`, `r` and `s` we can simply compute the other valid `s` and adjust `v` accordingly, e.g. if `s < n/2`, compute `s_new = n - s` and change `v` from 27 to 28.
 
@@ -141,3 +141,5 @@ See [ExploitEtherWallet.sol](../script/exploits/ExploitEtherWallet.sol) for full
 
 - [EtherWallet.t.sol](../test/EtherWallet.t.sol) test script setting up and exploiting the contract
 - [More info](http://coders-errand.com/malleability-ecdsa-signatures/) about signature malleability
+- [A closer look at Ethereum signatures](https://hackernoon.com/a-closer-look-at-ethereum-signatures-5784c14abecc)
+- [Math behind elliptic curve cryptography](https://hackernoon.com/what-is-the-math-behind-elliptic-curve-cryptography-f61b25253da3)
