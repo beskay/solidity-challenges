@@ -6,13 +6,13 @@ The same as in previous challenges: Steal the ether in the contract
 
 ## Overview
 
-Vault.sol serves as a proxy contract for Vesting.sol. It is possible to deposit Ether, but theres no function to withdraw it. All deposited Ether follows the vesting schedule defined in the Vesting contract.
+`Vault.sol` serves as a proxy contract for Vesting.sol. It is possible to deposit Ether, but theres no function to withdraw it. All deposited Ether follows the vesting schedule defined in the Vesting contract.
 
 `Vault.sol` incorporates function `execute`, which allows arbitrary calls to contracts, and internal function `_delegate`, which is called via the fallback function.
 
 ## Exploit
 
-The exploit is based on storage collision, if contract A calls contract B via delegatecall, the code of contract B with storage of contract A will be executed.
+The exploit is based on storage collision, if contract A calls contract B via `delegatecall`, the code of contract B writes to storage of contract A.
 
 In our case `Vault.sol` delegatecalls to `Vesting.sol`, so `Vesting.sol` accesses the storage of `Vault.sol`.
 
@@ -40,7 +40,7 @@ The attacker address used has to have a higher decimal value than the current ow
 require(durationSeconds > duration, "You cant decrease the vesting time!");
 ```
 
-Remember, we access the storage of `Vault.sol`, so the value of `duration` is actually the `owner` of `Vault.sol`.
+Remember, when we use `delegatecall`, we read/write from the storage of `Vault.sol`, so the value of `duration` is actually the `owner` of `Vault.sol`.
 
 We have to bypass the `onlyAuth` modifier of function `_delegate`. We can do this by calling `execute(address, payload)`. `Payload` has to be the function signature of `setDuration(uint256)`. Since `Vault.sol` doesnt implement function `setDuration(uint256)`, the fallback function will be executed, which delegates the call to our Vesting contract
 
@@ -72,3 +72,5 @@ See [ExploitVault.sol](../script/exploits/ExploitVault.sol) for full code.
 ## Further information
 
 - [Vault.t.sol](../test/Vault.t.sol) test script setting up and exploiting the contract
+- [More info](https://docs.openzeppelin.com/upgrades-plugins/1.x/proxies#unstructured-storage-proxies) to storage collisions
+- [Infographic](https://twitter.com/beskay0x/status/1504232058566197250/photo/1) to understand execution context in delegatecalls better
