@@ -1,12 +1,12 @@
 # Challenges
 
 | No  | Contracts                                                                    | Type                                  | Difficulty | Writeup                                                                                 |
-| --- | ---------------------------------------------------------------------------- | ------------------------------------- | ---------- | --------------------------------------------------------------------------------------- |
+| --- | ---------------------------------------------------------------------------- | ------------------------------------- | ---------- | --------------------------------------------------------------------------------------- | --- | --- |
 | 1   | [PrivateData.sol](src/PrivateData.sol)                                       | Private data                          | Easy       | [link](https://mirror.xyz/ethernautdao.eth/mxnAUuwRX6h42jubCzF_9-Tbsp14uH_eQ3xyEn4jF7w) |
 | 2   | [Wallet.sol](src/Wallet.sol),<br/>[WalletLibrary.sol](src/WalletLibrary.sol) | Low level calls                       | Easy       | [link](https://mirror.xyz/ethernautdao.eth/-rj5iTdt_GTRNS7aIzJBwqp95UGemxIMzNN-m96Io8Y) |
-| 3   | [Vault.sol](src/Vault.sol),<br/>[Vesting.sol](src/Vesting.sol)               | Low level calls                       | Medium     | soon                                                                                    |
+| 3   | [VNFT.sol](src/VNFT.sol)                                                     | Weak RNG,<br/> Smart contract minting | Medium     | [VNFT.md](writeups/VNFT.md)                                                             |
 | 4   | [EtherWallet.sol](src/EtherWallet.sol)                                       | Signature Malleability                | Medium     | [EtherWallet.md](writeups/EtherWallet.md)                                               |
-| 5   | [VNFT.sol](src/VNFT.sol)                                                     | Weak RNG,<br/> Smart contract minting | Medium     | [VNFT.md](writeups/VNFT.md)                                                             |
+| 5   | [Vault.sol](src/Vault.sol),<br/>[Vesting.sol](src/Vesting.sol)               | Low level calls                       | Medium     | [Vault.md](writeups/Vault.md)                                                           |     |     |
 | 6   | Staking (coming soon)                                                        | TBA                                   | TBA        | soon                                                                                    |
 
 ## Install
