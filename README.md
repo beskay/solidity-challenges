@@ -18,6 +18,18 @@ git clone git@github.com:beskay/solidity-challenges.git
 git submodule update --init --recursive  ## initialize submodule dependencies
 ```
 
+## Tests and Exploits
+
+See [/test](./test/) for an example setup and exploit test of all challenges. In order to test a single contract, run
+
+```
+forge test --match-contract <CONTRACT_NAME>
+```
+
+E.g. `forge test --match-contract PrivateTest` to run the test for `PrivateData.sol`.
+
+See [/script/exploits](./script/exploits/) for example exploit scripts to hack the deployed contracts on the goerli testnet
+
 ## Deploy and verify
 
 To deploy and verify the contracts, run
