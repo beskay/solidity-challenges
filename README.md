@@ -7,7 +7,7 @@
 | 3   | [VNFT.sol](src/VNFT.sol)                                                     | Weak RNG,<br/> Smart contract minting | Medium     | [VNFT.md](writeups/VNFT.md)                                                             |
 | 4   | [EtherWallet.sol](src/EtherWallet.sol)                                       | Signature Malleability                | Medium     | [EtherWallet.md](writeups/EtherWallet.md)                                               |
 | 5   | [Vault.sol](src/Vault.sol),<br/>[Vesting.sol](src/Vesting.sol)               | Low level calls                       | Medium     | [Vault.md](writeups/Vault.md)                                                           |
-| 6   | Staking (coming soon)                                                        | TBA                                   | TBA        | soon                                                                                    |
+| 6   | [Staking.sol](src/Staking.sol)                                               | Gas griefing                          | Medium     | [Staking.md](writeups/Staking.md)                                                       |
 
 ## Install
 
