@@ -24,11 +24,11 @@ contract StakingTest is Test {
 
     RewardToken internal rtk;
     StakingToken internal stk;
-    MultiRewards internal staking;
+    Staking internal staking;
     MockERC20 internal token;
 
-    // 1 week
-    uint256 duration = 86400 * 7;
+    // 3 months
+    uint256 duration = 86400 * 7 * 12;
 
     function setUp() public {
         // deploy erc20s for rewardtoken
@@ -42,7 +42,7 @@ contract StakingTest is Test {
 
         // deploy staking token + staking contract
         stk = new StakingToken();
-        staking = new MultiRewards(address(stk));
+        staking = new Staking(address(stk));
 
         // add rewardToken as reward for staking contract
         staking.addReward(address(rtk), address(this), duration);
@@ -66,6 +66,7 @@ contract StakingTest is Test {
     }
 
     function testExit() public {
+        // impersonate alice
         vm.startPrank(alice);
 
         // stake tokens
@@ -74,10 +75,10 @@ contract StakingTest is Test {
         staking.stake(1 wei);
 
         // exit, i.e. withdraw and getreward() with not enough gas
-        // gas is determined experimentally
+        // gas is determined experimentally -- it depends on the specific ETH hardfork used!
         staking.exit{gas: 525000}();
 
-        // should pause contract
+        // contract should be paused, hence no new stakes possible
         vm.expectRevert("Pausable: paused");
         staking.stake(1 wei);
 

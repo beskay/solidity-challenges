@@ -31,16 +31,11 @@ contract PrivateTest is Test {
         privatedata = new PrivateData("test");
     }
 
-    event OwnershipTaken(
-        address indexed previousOwner,
-        address indexed newOwner
-    );
+    event OwnershipTaken(address indexed previousOwner, address indexed newOwner);
 
     function testAttack() public {
         // the secret key is stored in slot 8, vm.load returns bytes32 so have to cast it to uint
-        uint256 secret = uint256(
-            vm.load(address(privatedata), bytes32(uint256(8)))
-        );
+        uint256 secret = uint256(vm.load(address(privatedata), bytes32(uint256(8))));
         emit log_uint(secret);
 
         // reverts when wrong key

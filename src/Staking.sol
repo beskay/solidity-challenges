@@ -8,7 +8,7 @@ import "openzeppelin-contracts/contracts/access/Ownable.sol";
 import "openzeppelin-contracts/contracts/security/ReentrancyGuard.sol";
 import "openzeppelin-contracts/contracts/security/Pausable.sol";
 
-contract MultiRewards is ReentrancyGuard, Ownable, Pausable {
+contract Staking is ReentrancyGuard, Ownable, Pausable {
     using SafeMath for uint256;
 
     /* ========== STATE VARIABLES ========== */
@@ -149,22 +149,6 @@ contract MultiRewards is ReentrancyGuard, Ownable, Pausable {
         rewardData[_rewardsToken].lastUpdateTime = block.timestamp;
         rewardData[_rewardsToken].periodFinish = block.timestamp.add(rewardData[_rewardsToken].rewardsDuration);
         emit RewardAdded(reward);
-    }
-
-    // Added to support recovering LP Rewards from other systems such as BAL to be distributed to holders
-    function recoverERC20(address tokenAddress, uint256 tokenAmount) external onlyOwner {
-        require(tokenAddress != address(stakingToken), "Cannot withdraw staking token");
-        require(rewardData[tokenAddress].lastUpdateTime == 0, "Cannot withdraw reward token");
-        IERC20(tokenAddress).transfer(owner(), tokenAmount);
-        emit Recovered(tokenAddress, tokenAmount);
-    }
-
-    function setRewardsDuration(address _rewardsToken, uint256 _rewardsDuration) external {
-        require(block.timestamp > rewardData[_rewardsToken].periodFinish, "Reward period still active");
-        require(rewardData[_rewardsToken].rewardsDistributor == msg.sender);
-        require(_rewardsDuration > 0, "Reward duration must be non-zero");
-        rewardData[_rewardsToken].rewardsDuration = _rewardsDuration;
-        emit RewardsDurationUpdated(_rewardsToken, rewardData[_rewardsToken].rewardsDuration);
     }
 
     /* ========== MODIFIERS ========== */

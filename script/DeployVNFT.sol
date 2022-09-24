@@ -19,12 +19,8 @@ contract DeployVNFT is Script {
 
         // sign message
         bytes32 hash = keccak256("EthernautDAO");
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(
-            privateKey,
-            keccak256(
-                abi.encodePacked("\x19Ethereum Signed Message:\n32", hash)
-            )
-        );
+        (uint8 v, bytes32 r, bytes32 s) =
+            vm.sign(privateKey, keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", hash)));
         bytes memory signature = abi.encodePacked(r, s, v);
 
         vnft.whitelistMint(msg.sender, 1, hash, signature);

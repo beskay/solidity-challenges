@@ -38,9 +38,7 @@ contract WalletLibraryTest is Test {
     }
 
     function testFunctionality() public {
-        (bool s, bytes memory ret) = address(wallet).call(
-            abi.encodeWithSignature("getOwners()")
-        );
+        (bool s, bytes memory ret) = address(wallet).call(abi.encodeWithSignature("getOwners()"));
         assertTrue(s);
         emit log_bytes(ret);
 
@@ -50,34 +48,22 @@ contract WalletLibraryTest is Test {
 
         // submit tx
         vm.prank(alice);
-        (bool d, ) = address(wallet).call(
-            abi.encodeWithSignature(
-                "submitTransaction(address,uint256,bytes)",
-                address(0),
-                0,
-                "test"
-            )
-        );
+        (bool d,) =
+            address(wallet).call(abi.encodeWithSignature("submitTransaction(address,uint256,bytes)", address(0), 0, "test"));
         require(d, "fail");
 
         // confirm tx
         vm.prank(bob);
-        (bool f, ) = address(wallet).call(
-            abi.encodeWithSignature("confirmTransaction(uint256)", 0)
-        );
+        (bool f,) = address(wallet).call(abi.encodeWithSignature("confirmTransaction(uint256)", 0));
         require(f, "fail");
 
         vm.prank(cody);
-        (bool g, ) = address(wallet).call(
-            abi.encodeWithSignature("confirmTransaction(uint256)", 0)
-        );
+        (bool g,) = address(wallet).call(abi.encodeWithSignature("confirmTransaction(uint256)", 0));
         require(g, "fail");
 
         // execute tx
         vm.prank(alice);
-        (bool h, ) = address(wallet).call(
-            abi.encodeWithSignature("executeTransaction(uint256)", 0)
-        );
+        (bool h,) = address(wallet).call(abi.encodeWithSignature("executeTransaction(uint256)", 0));
         require(h, "fail");
     }
 
@@ -91,36 +77,23 @@ contract WalletLibraryTest is Test {
         uint256 _numConfirmationsRequired = 1;
 
         // add attacker address as owner and set numConfirmations to 1
-        (bool s, ) = address(wallet).call(
-            abi.encodeWithSignature(
-                "initWallet(address[],uint256)",
-                _owners,
-                _numConfirmationsRequired
-            )
+        (bool s,) = address(wallet).call(
+            abi.encodeWithSignature("initWallet(address[],uint256)", _owners, _numConfirmationsRequired)
         );
         assertTrue(s);
 
         // submit tx
-        (bool d, ) = address(wallet).call(
-            abi.encodeWithSignature(
-                "submitTransaction(address,uint256,bytes)",
-                address(100000),
-                0,
-                "test"
-            )
+        (bool d,) = address(wallet).call(
+            abi.encodeWithSignature("submitTransaction(address,uint256,bytes)", address(100000), 0, "test")
         );
         require(d, "fail");
 
         // confirm tx
-        (bool f, ) = address(wallet).call(
-            abi.encodeWithSignature("confirmTransaction(uint256)", 0)
-        );
+        (bool f,) = address(wallet).call(abi.encodeWithSignature("confirmTransaction(uint256)", 0));
         require(f, "fail");
 
         // execute tx
-        (bool h, ) = address(wallet).call(
-            abi.encodeWithSignature("executeTransaction(uint256)", 0)
-        );
+        (bool h,) = address(wallet).call(abi.encodeWithSignature("executeTransaction(uint256)", 0));
         require(h, "fail");
     }
 }

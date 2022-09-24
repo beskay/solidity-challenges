@@ -27,28 +27,14 @@ contract VNFT is ERC721, Ownable {
     }
 
     // try your luck and mint even if you are not whitelisted
-    function imFeelingLucky(
-        address to,
-        uint256 qty,
-        uint256 number
-    ) external {
+    function imFeelingLucky(address to, uint256 qty, uint256 number) external {
         require(qty > 0 && qty <= MAX_TX, "Invalid quantity");
         require(totalSupply + qty <= MAX_SUPPLY, "Max supply reached");
-        require(
-            mintsPerWallet[to] + qty <= MAX_WALLET,
-            "Max balance per wallet reached"
-        );
+        require(mintsPerWallet[to] + qty <= MAX_WALLET, "Max balance per wallet reached");
         require((msg.sender).code.length == 0, "Only EOA allowed");
 
-        uint256 randomNumber = uint256(
-            keccak256(
-                abi.encodePacked(
-                    blockhash(block.number - 1),
-                    block.timestamp,
-                    totalSupply
-                )
-            )
-        ) % 100;
+        uint256 randomNumber =
+            uint256(keccak256(abi.encodePacked(blockhash(block.number - 1), block.timestamp, totalSupply))) % 100;
 
         require(randomNumber == number, "Better luck next time!");
 
@@ -63,21 +49,10 @@ contract VNFT is ERC721, Ownable {
     }
 
     // only whitelisted wallets can mint
-    function whitelistMint(
-        address to,
-        uint256 qty,
-        bytes32 hash,
-        bytes memory signature
-    ) external payable {
-        require(
-            recoverSigner(hash, signature) == owner(),
-            "Address is not allowlisted"
-        );
+    function whitelistMint(address to, uint256 qty, bytes32 hash, bytes memory signature) external payable {
+        require(recoverSigner(hash, signature) == owner(), "Address is not allowlisted");
         require(totalSupply + qty <= MAX_SUPPLY, "Max supply reached");
-        require(
-            mintsPerWallet[to] + qty <= MAX_WALLET,
-            "Max balance per wallet reached"
-        );
+        require(mintsPerWallet[to] + qty <= MAX_WALLET, "Max balance per wallet reached");
 
         unchecked {
             mintsPerWallet[to] += qty;
@@ -92,24 +67,13 @@ contract VNFT is ERC721, Ownable {
     /**
      * @dev See {IERC721Metadata-tokenURI}.
      */
-    function tokenURI(uint256 _tokenId)
-        public
-        view
-        override
-        returns (string memory)
-    {
+    function tokenURI(uint256 _tokenId) public view override returns (string memory) {
         require(_tokenId < totalSupply, "Non existent token");
         return string(abi.encodePacked(baseURI, Strings.toString(_tokenId)));
     }
 
-    function recoverSigner(bytes32 hash, bytes memory signature)
-        public
-        pure
-        returns (address)
-    {
-        bytes32 messageDigest = keccak256(
-            abi.encodePacked("\x19Ethereum Signed Message:\n32", hash)
-        );
+    function recoverSigner(bytes32 hash, bytes memory signature) public pure returns (address) {
+        bytes32 messageDigest = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", hash));
         return ECDSA.recover(messageDigest, signature);
     }
 }

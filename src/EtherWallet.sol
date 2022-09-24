@@ -2,11 +2,7 @@
 pragma solidity ^0.8.13;
 
 library ECDSA {
-    function recover(bytes32 hash, bytes memory signature)
-        internal
-        pure
-        returns (address)
-    {
+    function recover(bytes32 hash, bytes memory signature) internal pure returns (address) {
         // Check the signature length
         if (signature.length != 65) {
             revert("ECDSA: invalid signature length");
@@ -33,12 +29,7 @@ library ECDSA {
      * @dev Overload of {ECDSA-recover-bytes32-bytes-} that receives the `v`,
      * `r` and `s` signature fields separately.
      */
-    function recover(
-        bytes32 hash,
-        uint8 v,
-        bytes32 r,
-        bytes32 s
-    ) internal pure returns (address) {
+    function recover(bytes32 hash, uint8 v, bytes32 r, bytes32 s) internal pure returns (address) {
         // If the signature is valid, return the signer address
         address signer = ecrecover(hash, v, r, s);
         require(signer != address(0), "ECDSA: invalid signature");
@@ -54,17 +45,10 @@ library ECDSA {
      *
      * See {recover}.
      */
-    function toEthSignedMessageHash(bytes32 hash)
-        internal
-        pure
-        returns (bytes32)
-    {
+    function toEthSignedMessageHash(bytes32 hash) internal pure returns (bytes32) {
         // 32 is the length in bytes of hash,
         // enforced by the type signature above
-        return
-            keccak256(
-                abi.encodePacked("\x19Ethereum Signed Message:\n32", hash)
-            );
+        return keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", hash));
     }
 }
 
@@ -80,10 +64,7 @@ contract EtherWallet {
     event Deposit(address indexed _from, uint256 indexed value);
     event Withdraw(address indexed _to, uint256 indexed value);
 
-    event OwnershipTransferred(
-        address indexed oldOwner,
-        address indexed newOwner
-    );
+    event OwnershipTransferred(address indexed oldOwner, address indexed newOwner);
 
     constructor() payable {
         owner = msg.sender;
@@ -96,13 +77,7 @@ contract EtherWallet {
     // anyone with a valid signature can call this, in case of an emergency
     function withdraw(bytes memory signature) external {
         require(!usedSignatures[signature], "Signature already used!");
-        require(
-            ECDSA.recover(
-                keccak256("\x19Ethereum Signed Message:\n32"),
-                signature
-            ) == owner,
-            "No permission!"
-        );
+        require(ECDSA.recover(keccak256("\x19Ethereum Signed Message:\n32"), signature) == owner, "No permission!");
         usedSignatures[signature] = true;
 
         uint256 balance = address(this).balance;

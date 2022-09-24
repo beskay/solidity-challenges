@@ -27,10 +27,7 @@ contract Vesting {
      * @dev Set the vesting duration of the vesting wallet.
      */
     function setDuration(uint256 durationSeconds) public {
-        require(
-            durationSeconds > duration,
-            "You cant decrease the vesting time!"
-        );
+        require(durationSeconds > duration, "You cant decrease the vesting time!");
 
         duration = durationSeconds;
     }
@@ -44,19 +41,14 @@ contract Vesting {
         uint256 releasable = vestedAmount(block.timestamp) - released;
         released += releasable;
         emit EtherReleased(releasable);
-        (bool success, ) = payable(beneficiary).call{value: releasable}("");
+        (bool success,) = payable(beneficiary).call{value: releasable}("");
         require(success, "tx failed");
     }
 
     /**
      * @dev Calculates the amount of ether that has already vested. Default implementation is a linear vesting curve.
      */
-    function vestedAmount(uint256 timestamp)
-        public
-        view
-        virtual
-        returns (uint256)
-    {
+    function vestedAmount(uint256 timestamp) public view virtual returns (uint256) {
         return _vestingSchedule(address(this).balance + released, timestamp);
     }
 
@@ -64,12 +56,7 @@ contract Vesting {
      * @dev Virtual implementation of the vesting formula. This returns the amount vested, as a function of time, for
      * an asset given its total historical allocation.
      */
-    function _vestingSchedule(uint256 totalAllocation, uint256 timestamp)
-        internal
-        view
-        virtual
-        returns (uint256)
-    {
+    function _vestingSchedule(uint256 totalAllocation, uint256 timestamp) internal view virtual returns (uint256) {
         if (timestamp < start) {
             return 0;
         } else if (timestamp > start + duration) {

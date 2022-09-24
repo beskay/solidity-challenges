@@ -40,10 +40,7 @@ contract EtherWalletTest is Test {
 
     bytes private signature;
 
-    event OwnershipTransferred(
-        address indexed previousOwner,
-        address indexed newOwner
-    );
+    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
     event Withdraw(address indexed _to, uint256 indexed value);
 
     function setUp() public {
@@ -67,7 +64,7 @@ contract EtherWalletTest is Test {
         etherwallet.withdraw(signature);
 
         // give contract ether again
-        (bool sent, ) = address(etherwallet).call{value: 100 ether}("");
+        (bool sent,) = address(etherwallet).call{value: 100 ether}("");
         require(sent, "Failed to send Ether");
 
         vm.stopPrank();

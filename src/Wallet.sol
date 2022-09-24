@@ -28,19 +28,11 @@ contract Wallet {
 
     Transaction[] public transactions;
 
-    constructor(
-        address _walletLibrary,
-        address[] memory _owners,
-        uint256 _numConfirmationsRequired
-    ) {
+    constructor(address _walletLibrary, address[] memory _owners, uint256 _numConfirmationsRequired) {
         walletLibrary = _walletLibrary;
 
-        (bool success, ) = _walletLibrary.delegatecall(
-            abi.encodeWithSignature(
-                "initWallet(address[],uint256)",
-                _owners,
-                _numConfirmationsRequired
-            )
+        (bool success,) = _walletLibrary.delegatecall(
+            abi.encodeWithSignature("initWallet(address[],uint256)", _owners, _numConfirmationsRequired)
         );
 
         require(success, "initWallet failed");

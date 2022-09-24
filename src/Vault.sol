@@ -14,10 +14,7 @@ contract Vault {
     }
 
     modifier onlyAuth() {
-        require(
-            msg.sender == owner || msg.sender == address(this),
-            "No permission"
-        );
+        require(msg.sender == owner || msg.sender == address(this), "No permission");
         _;
     }
 
@@ -38,10 +35,7 @@ contract Vault {
         emit DelegateUpdated(oldDelegate, newDelegateAddress);
     }
 
-    function execute(address _target, bytes memory payload)
-        external
-        returns (bytes memory)
-    {
+    function execute(address _target, bytes memory payload) external returns (bytes memory) {
         (bool success, bytes memory ret) = address(_target).call(payload);
         require(success, "failed");
         return ret;
@@ -63,12 +57,8 @@ contract Vault {
 
             switch success
             // delegatecall returns 0 on error.
-            case 0 {
-                revert(0, returndatasize())
-            }
-            default {
-                return(0, returndatasize())
-            }
+            case 0 { revert(0, returndatasize()) }
+            default { return(0, returndatasize()) }
         }
     }
 }

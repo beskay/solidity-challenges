@@ -11,7 +11,7 @@ import "../src/tokens/StakingToken.sol";
 contract DeployStaking is Script {
     RewardToken internal rtk;
     StakingToken internal stk;
-    MultiRewards internal staking;
+    Staking internal staking;
     MockERC20 internal token;
 
     // 3 months
@@ -31,7 +31,7 @@ contract DeployStaking is Script {
 
         // deploy staking token + staking contract
         stk = new StakingToken();
-        staking = new MultiRewards(address(stk));
+        staking = new Staking(address(stk));
 
         // add rewardToken as reward for staking contract
         staking.addReward(address(rtk), msg.sender, duration);

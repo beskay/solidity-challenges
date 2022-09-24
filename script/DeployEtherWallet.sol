@@ -26,7 +26,7 @@ contract DeployEtherWallet is Script {
         etherwallet.withdraw(signature);
 
         // send ether again
-        (bool sent, ) = address(etherwallet).call{value: 0.2 ether}("");
+        (bool sent,) = address(etherwallet).call{value: 0.2 ether}("");
         require(sent, "Failed to send Ether");
 
         vm.stopBroadcast();
