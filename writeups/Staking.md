@@ -2,7 +2,7 @@
 
 ## The objective
 
-According to [that](https://twitter.com/EthernautDAO/status/1571136905021952001) tweet the goal is to "stop" the contract, which means we have to set the contract to paused.
+The challenge is introduced in [this](https://twitter.com/EthernautDAO/status/1571136905021952001) Tweet from [EthernautDAO](https://twitter.com/EthernautDAO). The goal is to _stop_ the contract, which means we have to set the contract to paused.
 
 ## Overview
 

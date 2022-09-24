@@ -2,7 +2,7 @@
 
 ## The objective
 
-VNFT.sol is a ERC721 contract. The sale is capped at 2 tokens per wallet -- the goal is to exploit the sale by minting more than the allowed 2 NFTs per wallet, all in a single transaction.
+[VNFT.sol](https://goerli.etherscan.io/address/0xc357c220d9ffe0c23282fcc300627f14d9b6314c) is a ERC721 contract. The sale is capped at 2 tokens per wallet -- the goal is to exploit the sale by minting more than the allowed 2 NFTs per wallet, all in a single transaction, see corresponding [tweet](https://twitter.com/EthernautDAO/status/1561352425394515968).
 
 ## Overview
 
