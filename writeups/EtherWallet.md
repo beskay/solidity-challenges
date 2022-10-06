@@ -143,3 +143,5 @@ See [ExploitEtherWallet.sol](../script/exploits/ExploitEtherWallet.sol) for full
 - [More info](http://coders-errand.com/malleability-ecdsa-signatures/) about signature malleability
 - [A closer look at Ethereum signatures](https://hackernoon.com/a-closer-look-at-ethereum-signatures-5784c14abecc)
 - [Math behind elliptic curve cryptography](https://hackernoon.com/what-is-the-math-behind-elliptic-curve-cryptography-f61b25253da3)
+
+See also [this article](https://stermi.xyz/blog/ethernautdao-ctf-etherwallet-solution) for a writeup from [StErMi](https://twitter.com/StErMi)
