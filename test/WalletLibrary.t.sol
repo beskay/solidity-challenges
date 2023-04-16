@@ -18,7 +18,7 @@ import "../src/WalletLibrary.sol";
  * An attacker can just call the function again, set itself to owner and change the
  * required confirmations to 1
  *
- * This explot is inspired from the first parity multisig hack,
+ * This exploit is inspired from the first parity multisig hack,
  * see: https://hackingdistributed.com/2017/07/22/deep-dive-parity-bug/
  */
 contract WalletLibraryTest is Test {

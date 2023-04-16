@@ -15,27 +15,27 @@ Install [Foundry](https://github.com/gakonst/foundry) if you haven't already.
 
 ```
 git clone git@github.com:beskay/solidity-challenges.git
-git submodule update --init --recursive  ## initialize submodule dependencies
+forge install
 ```
 
 ## Tests and Exploits
 
-See [/test](./test/) for an example setup and exploit test of all challenges. In order to test a single contract, run
+See [test](./test/) for an example setup and exploit of all challenges. In order to test a single contract, run
 
 ```
 forge test --match-contract <CONTRACT_NAME>
 ```
 
-E.g. `forge test --match-contract PrivateTest` to run the test for `PrivateData.sol`.
+E.g. `forge test --match-contract PrivateDataTest` to run the test for `PrivateData.sol`.
 
-See [/script/exploits](./script/exploits/) for example exploit scripts to hack the deployed contracts on the goerli testnet
+See [script/exploits](./script/exploits/) for example exploit scripts to hack the deployed contracts on the goerli testnet
 
 ## Deploy and verify
 
 To deploy and verify the contracts, run
 
 ```
-forge script script/<deploy_script>.sol:<contract_name> --rpc-url $RPC_URL --broadcast --verify --private-key $PK --etherscan-api-key $ETHERSCAN_API -vvv
+forge script <deploy_script> --rpc-url $RPC_URL --broadcast --verify --private-key $PK --etherscan-api-key $ETHERSCAN_API -vvv
 ```
 
 Note that ETH_RPC_URL, ETHERSCAN_API and PK has to be set

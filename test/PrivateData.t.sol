@@ -23,8 +23,11 @@ import "../src/PrivateData.sol";
  *
  * As we can see, our secretKey is stored in slot 8. All we have to do is
  * read the storage in slot 8 and call takeOwnership(secretKey) with the result
+ *
+ * You can check the storage layout yourself with 
+ * forge inspect PrivateData storage --pretty
  */
-contract PrivateTest is Test {
+contract PrivateDataTest is Test {
     PrivateData internal privatedata;
 
     function setUp() public {
